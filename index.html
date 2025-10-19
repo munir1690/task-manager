@@ -108,6 +108,8 @@
             const prevDayButton = document.getElementById('prev-day');
             const nextDayButton = document.getElementById('next-day');
 
+            const STORAGE_KEY = 'matrixTasks';
+
             let currentDate = new Date();
 
             const quadrantLists = {
@@ -132,8 +134,13 @@
 
             // --- LOCAL STORAGE ---
             const getTasksFromStorage = () => {
-                const tasks = localStorage.getItem('matrixTasks');
-                return tasks ? JSON.parse(tasks) : {};
+                try {
+                    const tasks = localStorage.getItem(STORAGE_KEY);
+                    return tasks ? JSON.parse(tasks) : {};
+                } catch (e) {
+                    console.error("Error parsing tasks from localStorage:", e);
+                    return {}; // Return a default empty object on error
+                }
             };
 
             const saveTasksForDate = (dateString) => {
@@ -150,7 +157,7 @@
                     });
                 }
                 allTasks[dateString] = tasksForDay;
-                localStorage.setItem('matrixTasks', JSON.stringify(allTasks));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(allTasks));
             };
 
             const loadTasksForDate = (dateString) => {
@@ -245,4 +252,3 @@
     </script>
 </body>
 </html>
-
